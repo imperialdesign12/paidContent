@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Payment</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Add your custom styles here if needed */
+    </style>
+</head>
+<body>
+    <div id="payment-container">
+        <h2>Content Purchase</h2>
+        <div id="payment-form">
+            <label for="card-element">
+                Credit or debit card
+            </label>
+            <div id="card-element">
+                <!-- A Stripe Element will be inserted here. -->
+            </div>
+
+            <div id="card-errors" role="alert"></div>
+
+            <button id="purchase-button">Purchase Content</button>
+        </div>
+    </div>
+
+    <script>
+        // Set your publishable key
+        var stripe = Stripe('your_publishable_key_here');
+        var elements = stripe.elements();
+
+        // Create an instance of the card Element.
+        var card = elements.create('card');
+
+        // Add an instance of the card Element into the `card-element` div.
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission.
+        var purchaseButton = document.getElementById('purchase-button');
+        purchaseButton.addEventListener('click', function(ev) {
+            stripe.confirmCardPayment(
+                'your_secret_key_here',
+                {
+                    payment_method: {
+                        card: card,
+                    }
+                }
+            ).then(function(result) {
+                if (result.error) {
+                    // Show error to your customer (e.g., insufficient funds)
+                    alert(result.error.message);
+                } else {
+                    // The payment has been processed!
+                    if (result.paymentIntent.status === 'succeeded') {
+                        alert('Payment succeeded!');
+                        // Add logic to show content or perform other actions after successful payment.
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

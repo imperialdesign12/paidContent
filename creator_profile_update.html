@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Background color for the body */
+            overflow-x: hidden; /* Hide horizontal overflow */
+        }
+
+        .app-bar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: white; /* Background color for each block */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+            position: relative;
+            margin-top: 20px; /* Added margin to separate sections from the app bar */
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .separator-line {
+            margin: 20px 0;
+            height: 1px;
+            background-color: #ddd; /* Separator line color */
+        }
+
+        /* Add more styling as needed */
+
+        /* Square layout with CSS Grid */
+        body {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            grid-gap: 20px;
+        }
+
+        .upload-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .media-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .uploaded-media {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            flex-basis: calc(50% - 10px); /* Adjust the width of each element */
+            display: none;
+        }
+
+        .remove-button {
+            background-color: #ff5252; /* Red color for remove button */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+
+</head>
+<body>
+
+    <div class="app-bar">
+        <h1>Social Media App</h1>
+    </div>
+
+    <!-- Function to prompt user for size -->
+    <script>
+        function promptForSize() {
+            const size = prompt("Enter the size (large, medium, small):");
+            if (size && (size === "large" || size === "medium" || size === "small")) {
+                return size;
+            } else {
+                alert("Invalid size. Please enter 'large', 'medium', or 'small'.");
+                return promptForSize(); // Recursively call promptForSize until a valid size is entered
+            }
+        }
+    </script>
+
+    <!-- Instagram Section -->
+    <section id="instagram">
+        <h2>Instagram</h2>
+        <p>Your Instagram feed goes here. Use Instagram Graph API to fetch content.</p>
+
+        <div class="media-container">
+            <!-- Display uploaded photo -->
+            <div>
+                <img class="uploaded-media" id="uploadedPhotoInstagram">
+                <button class="remove-button" onclick="removeMedia('uploadedPhotoInstagram')">Remove</button>
+            </div>
+
+            <!-- Display uploaded video -->
+            <div>
+                <video class="uploaded-media" controls id="uploadedVideoInstagram"></video>
+                <button class="remove-button" onclick="removeMedia('uploadedVideoInstagram')">Remove</button>
+            </div>
+        </div>
+
+        <!-- File input for video upload -->
+        <label for="uploadVideoInstagram" class="upload-button">Upload Video</label>
+        <input type="file" id="uploadVideoInstagram" accept="video/*" onchange="handleVideoUpload('uploadedVideoInstagram', 'large')">
+
+        <!-- File input for photo upload -->
+        <label for="uploadPhotoInstagram" class="upload-button">Upload Photos</label>
+        <input type="file" id="uploadPhotoInstagram" accept="image/*" onchange="handlePhotoUpload('uploadedPhotoInstagram', 'large')">
+    </section>
+
+    <div class="separator-line"></div>
+
+    <!-- Twitter Section -->
+    <section id="twitter">
+        <h2>Twitter</h2>
+        <p>Your Twitter feed goes here. Use Twitter API to fetch content.</p>
+
+        <div class="media-container">
+            <!-- Display uploaded photo -->
+            <div>
+                <img class="uploaded-media" id="uploadedPhotoTwitter">
+                <button class="remove-button" onclick="removeMedia('uploadedPhotoTwitter')">Remove</button>
+            </div>
+
+            <!-- Display uploaded video -->
+            <div>
+                <video class="uploaded-media" controls id="uploadedVideoTwitter"></video>
+                <button class="remove-button" onclick="removeMedia('uploadedVideoTwitter')">Remove</button>
+            </div>
+        </div>
+
+        <!-- File input for video upload -->
+        <label for="uploadVideoTwitter" class="upload-button">Upload Video</label>
+        <input type="file" id="uploadVideoTwitter" accept="video/*" onchange="handleVideoUpload('uploadedVideoTwitter', 'medium')">
+
+        <!-- File input for photo upload -->
+        <label for="uploadPhotoTwitter" class="upload-button">Upload Photos</label>
+        <input type="file" id="uploadPhotoTwitter" accept="image/*" onchange="handlePhotoUpload('uploadedPhotoTwitter', 'medium')">
+    </section>
+
+    <div class="separator-line"></div>
+
+    <!-- YouTube Section -->
+    <section id="youtube">
+        <h2>YouTube</h2>
+        <p>Your YouTube feed goes here. Use YouTube API to fetch content.</p>
+
+        <div class="media-container">
+            <!-- Display uploaded photo -->
+            <div>
+                <img class="uploaded-media" id="uploadedPhotoYouTube">
+                <button class="remove-button" onclick="removeMedia('uploadedPhotoYouTube')">Remove</button>
+            </div>
+
+            <!-- Display uploaded video -->
+            <div>
+                <video class="uploaded-media" controls id="uploadedVideoYouTube"></video>
+                <button class="remove-button" onclick="removeMedia('uploadedVideoYouTube')">Remove</button>
+            </div>
+        </div>
+
+        <!-- File input for video upload -->
+        <label for="uploadVideoYouTube" class="upload-button">Upload Video</label>
+        <input type="file" id="uploadVideoYouTube" accept="video/*" onchange="handleVideoUpload('uploadedVideoYouTube', 'small')">
+
+        <!-- File input for photo upload -->
+        <label for="uploadPhotoYouTube" class="upload-button">Upload Photos</label>
+        <input type="file" id="uploadPhotoYouTube" accept="image/*" onchange="handlePhotoUpload('uploadedPhotoYouTube', 'small')">
+    </section>
+
+    <div class="separator-line"></div>
+
+    <!-- TikTok Section -->
+    <section id="tiktok">
+        <h2>TikTok</h2>
+        <p>Your TikTok feed goes here. Use TikTok API to fetch content.</p>
+
+        <div class="media-container">
+            <!-- Display uploaded photo -->
+            <div>
+                <img class="uploaded-media" id="uploadedPhotoTikTok">
+                <button class="remove-button" onclick="removeMedia('uploadedPhotoTikTok')">Remove</button>
+            </div>
+
+            <!-- Display uploaded video -->
+            <div>
+                <video class="uploaded-media" controls id="uploadedVideoTikTok"></video>
+                <button class="remove-button" onclick="removeMedia('uploadedVideoTikTok')">Remove</button>
+            </div>
+        </div>
+
+        <!-- File input for video upload -->
+        <label for="uploadVideoTikTok" class="upload-button">Upload Video</label>
+        <input type="file" id="uploadVideoTikTok" accept="video/*" onchange="handleVideoUpload('uploadedVideoTikTok', 'large')">
+
+        <!-- File input for photo upload -->
+        <label for="uploadPhotoTikTok" class="upload-button">Upload Photos</label>
+        <input type="file" id="uploadPhotoTikTok" accept="image/*" onchange="handlePhotoUpload('uploadedPhotoTikTok', 'large')">
+    </section>
+
+    <!-- Add more sections for additional social media platforms -->
+
+    <footer>
+        <p>© 2024 Social Media App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function handleVideoUpload(videoId, size) {
+            const videoInput = document.getElementById(`uploadVideo${videoId.replace('uploadedVideo', '')}`);
+            const uploadedVideo = videoInput.files[0];
+
+            // Display the uploaded video
+            if (uploadedVideo) {
+                document.getElementById(videoId).src = URL.createObjectURL(uploadedVideo);
+                document.getElementById(videoId).style.display = "block";
+                adjustMediaSize(videoId, size);
+            } else {
+                document.getElementById(videoId).style.display = "none";
+            }
+        }
+
+        function handlePhotoUpload(photoId, size) {
+            const photoInput = document.getElementById(`uploadPhoto${photoId.replace('uploadedPhoto', '')}`);
+            const uploadedPhoto = photoInput.files[0];
+
+            // Display the uploaded photo
+            if (uploadedPhoto) {
+                document.getElementById(photoId).src = URL.createObjectURL(uploadedPhoto);
+                document.getElementById(photoId).style.display = "block";
+                adjustMediaSize(photoId, size);
+            } else {
+                document.getElementById(photoId).style.display = "none";
+            }
+        }
+
+        function adjustMediaSize(mediaId, size) {
+            const mediaElement = document.getElementById(mediaId);
+
+            switch (size) {
+                case 'large':
+                    mediaElement.style.maxWidth = '70%';
+                    break;
+                case 'medium':
+                    mediaElement.style.maxWidth = '50%';
+                    break;
+                case 'small':
+                    mediaElement.style.maxWidth = '30%';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function removeMedia(mediaId) {
+            document.getElementById(mediaId).src = "";
+            document.getElementById(mediaId).style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>creators profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+        }
+
+        /* Add more styling as needed */
+
+        /* Square layout with CSS Grid */
+        body {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-gap: 20px;
+        }
+
+        /* Style for file input */
+        input[type="file"] {
+            display: none;
+        }
+
+        label[for="uploadVideo"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="instagram">
+        <h2>Instagram</h2>
+        <p>Your Instagram feed goes here. Use Instagram Graph API to fetch content.</p>
+
+        <!-- Placeholder for re-uploading videos -->
+        <label for="uploadVideo">Upload Video</label>
+        <input type="file" id="uploadVideo" accept="video/*">
+    </section>
+
+    <section id="twitter">
+        <h2>Twitter</h2>
+        <p>Your Twitter content goes here.</p>
+    </section>
+
+    <section id="youtube">
+        <h2>YouTube</h2>
+        <p>Your YouTube content goes here.</p>
+    </section>
+
+    <section id="tiktok">
+        <h2>TikTok</h2>
+        <p>Your TikTok content goes here.</p>
+    </section>
+
+    <!-- Add more sections for additional social media platforms -->
+
+    <script>
+        // You can add JavaScript code here to handle file upload and other functionalities
+        document.getElementById("uploadVideo").addEventListener("change", function(event) {
+            // Handle the file upload logic
+            console.log("File uploaded:", event.target.files[0]);
+        });
+    </script>
+
+</body>
+</html>
